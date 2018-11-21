@@ -6,6 +6,7 @@ package document;
  */
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PrimitiveIterator.OfDouble;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -66,27 +67,33 @@ public abstract class Document {
 		// TODO: Implement this method so that you can call it from the 
 	    // getNumSyllables method in BasicDocument (module 2) and 
 	    // EfficientDocument (module 3).
+		
 		String vowels = "AEIOUYaeiouy";
 		int numSyllables = 0;
-		boolean isVowel = false;
-		for (char c : word.toCharArray()) {
-			//System.out.println("isLastLetterVowel = " + isLastLetterVowel);
-			if (vowels.indexOf(c) != -1) {
-				if (isVowel == false) {
+		
+		for (int i=0; i<word.length(); i++) {
+			char currLetter = word.charAt(i);
+			// if first letter is vowel
+			if (i == 0 && vowels.indexOf(currLetter) != -1) {
+				numSyllables++;
+			}
+			// word is more than one letter
+			if (i > 0) {
+				char prevLetter = word.charAt(i - 1);
+				// if current letter is vowel and prev letter is not vowel
+				if (vowels.indexOf(currLetter) != -1 && vowels.indexOf(prevLetter) == -1) {
 					numSyllables++;
-					isVowel = true;
-				} else {
-					isVowel = true;
 				}
-			} else {
-				isVowel = false;
+				// if current letter is the last letter
+				if (i == word.length() - 1) {
+					// if the last letter is e and previous letter is not vowel and this is not the only syllable in the word
+					// we should not count the last e (e.g. lone)
+					if (word.charAt(i) == 'e' && vowels.indexOf(prevLetter) == -1 && numSyllables != 1) {
+						numSyllables = numSyllables - 1;
+					}
+				}
 			}
 		}
-		char lastLetter = word.charAt(word.length()-1);
-		char secondLastLetter = word.charAt(word.length()-2);
-		if ( lastLetter == 'e' && vowels.indexOf(secondLastLetter) == -1 && numSyllables > 1) {
-			numSyllables = numSyllables -1;	
-		}	
 	    return numSyllables;
 	}
 	
