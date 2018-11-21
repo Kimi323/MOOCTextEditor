@@ -32,11 +32,12 @@ public class BasicDocument extends Document
 	 * @return The number of words in the document.
 	 */
 	@Override
-	public int getNumWords()
-	{
+	public int getNumWords() {
 		//TODO: Implement this method in week 2 according to the comments above.  
 		// See the Module 2 support videos if you need help.
-	    return 0;
+	    Document d = new BasicDocument(this.getText());
+	    List<String> list = d.getTokens("[a-zA-Z]+");	    
+		return list.size();
 	}
 	
 	/**
@@ -56,7 +57,9 @@ public class BasicDocument extends Document
 	{
 	    //TODO: Implement this method.  See the Module 2 support videos 
         // if you need help.
-        return 0;
+		Document d = new BasicDocument(this.getText());
+		List<String> list = d.getTokens("[^.?!]+");
+        return list.size();
 	}
 	
 	/**
@@ -81,7 +84,13 @@ public class BasicDocument extends Document
 		// expression for the syllable counting.  We recommend you implement 
 		// the helper function countSyllables in Document.java using a loop, 
 		// and then call it here on each word.
-        return 0;
+	    Document d = new BasicDocument(this.getText());
+	    List<String> wordList = d.getTokens("[a-zA-Z]+");
+	    int numSyllables = 0;
+	    for (String word : wordList) {
+	    	numSyllables += countSyllables(word);
+	    }
+        return numSyllables;
 	}
 	
 	
@@ -111,6 +120,23 @@ public class BasicDocument extends Document
 		testCase(new BasicDocument("Sentences?!"), 3, 1, 1);
 		testCase(new BasicDocument("Lorem ipsum dolor sit amet, qui ex choro quodsi moderatius, nam dolores explicari forensibus ad."),
 		         32, 15, 1);
+//		 create my own test
+//		Document d = new BasicDocument("this is a test.23,54,390.");
+//		List<String> list = d.getTokens("[0-9a-z]+"); // [this is a test, 23, 54, 390]
+//		List<String> list = d.getTokens("[0-9]+");  // [23, 54, 390]
+//		List<String> list = d.getTokens("[^.,]+"); // [this is a test, 23, 54, 390]
+//		List<String> list = d.getTokens("[a-z ]|[0-9]+"); // [t, h, i, s,  , i, s,  , a,  , t, e, s, t, 23, 54, 390]
+//		List<String> list = d.getTokens("[a-z ]+|[0-9]+"); // [this is a test, 23, 54, 390]
+//		
+		Document d = new BasicDocument("sentence, with, lots, of, commas.!  "
+		        + "(And some poaren)).  The output is: 7.5.");
+		List<String> wordList = d.getTokens("[a-zA-Z]+");	
+	    System.out.println(wordList);
+	    int numSyllables = 0;
+	    for (String word : wordList) {
+	    	numSyllables += countSyllables(word);
+	    };
+	    System.out.println(numSyllables);
 	}
 	
 }

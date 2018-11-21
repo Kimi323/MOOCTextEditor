@@ -62,12 +62,32 @@ public abstract class Document {
 	 *       is not considered a syllable unless the word has no other syllables. 
 	 *       You should consider y a vowel.
 	 */
-	protected int countSyllables(String word)
-	{
+	protected static int countSyllables(String word) {
 		// TODO: Implement this method so that you can call it from the 
 	    // getNumSyllables method in BasicDocument (module 2) and 
 	    // EfficientDocument (module 3).
-	    return 0;
+		String vowels = "AEIOUYaeiouy";
+		int numSyllables = 0;
+		boolean isVowel = false;
+		for (char c : word.toCharArray()) {
+			//System.out.println("isLastLetterVowel = " + isLastLetterVowel);
+			if (vowels.indexOf(c) != -1) {
+				if (isVowel == false) {
+					numSyllables++;
+					isVowel = true;
+				} else {
+					isVowel = true;
+				}
+			} else {
+				isVowel = false;
+			}
+		}
+		char lastLetter = word.charAt(word.length()-1);
+		char secondLastLetter = word.charAt(word.length()-2);
+		if ( lastLetter == 'e' && vowels.indexOf(secondLastLetter) == -1 && numSyllables > 1) {
+			numSyllables = numSyllables -1;	
+		}	
+	    return numSyllables;
 	}
 	
 	/** A method for testing
