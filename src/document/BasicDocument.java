@@ -129,7 +129,7 @@ public class BasicDocument extends Document
 //		List<String> list = d.getTokens("[a-z ]+|[0-9]+"); // [this is a test, 23, 54, 390]
 //		
 		Document d = new BasicDocument("This is a test.  How many???  Senteeeeeeeeeences are here... there should be 5!  Right?");
-		List<String> wordList = d.getTokens("[a-zA-Z]+");	
+		List<String> wordList = d.getTokens("[!?.]+|[a-zA-Z]+");
 	    System.out.println(wordList);
 	    int numSyllables = 0;
 	    for (String word : wordList) {

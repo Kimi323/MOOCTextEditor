@@ -35,6 +35,7 @@ public class EfficientDocument extends Document {
 	{
 	    // Note: This is a fast way of checking whether a string is a word
 	    // You probably don't want to change it.
+		// tok is either alphabet(s) or punctuation(s).
 		return !(tok.indexOf("!") >=0 || tok.indexOf(".") >=0 || tok.indexOf("?")>=0);
 	}
 	
@@ -47,13 +48,32 @@ public class EfficientDocument extends Document {
 	{
 		// Call getTokens on the text to preserve separate strings that are 
 		// either words or sentence-ending punctuation.  Ignore everything
-		// That is not a word or a sentence-ending puctuation.
+		// That is not a word or a sentence-ending punctuation.
 		// MAKE SURE YOU UNDERSTAND THIS LINE BEFORE YOU CODE THE REST
 		// OF THIS METHOD.
+		// Returns alphabet only or punctuation only e.g. [This, is, a, test, ., How, many, ???, Senteeeeeeeeeences, are, here, ..., there, should, be, !, Right, ?]
 		List<String> tokens = getTokens("[!?.]+|[a-zA-Z]+");
+		
 		
 		// TODO: Finish this method.  Remember the countSyllables method from 
 		// Document.  That will come in handy here.  isWord defined above will also help.
+		if (tokens.isEmpty()) {
+			return;
+		}
+		
+		for (String s : tokens) {
+			if (isWord(s)) {
+				numWords++;
+				numSyllables += countSyllables(s);
+			} else {
+				numSentences++;
+			}
+		}
+		// the case where the last sentence does not end in a sentence-ending punctuation.
+		String lastWord = tokens.get(tokens.size()-1);
+		if (isWord(lastWord)) {
+			numSentences++;
+		}
 	}
 
 	
@@ -72,8 +92,8 @@ public class EfficientDocument extends Document {
 	 */
 	@Override
 	public int getNumSentences() {
-		//TODO: write this method.  Hint: It's simple
-		return 0;
+		//TODO: write this method.  Hint: It's simple		
+		return numSentences;
 	}
 
 	
@@ -94,7 +114,7 @@ public class EfficientDocument extends Document {
 	@Override
 	public int getNumWords() {
 		//TODO: write this method.  Hint: It's simple
-	    return 0;
+	    return numWords;
 	}
 
 
@@ -116,13 +136,12 @@ public class EfficientDocument extends Document {
 	@Override
 	public int getNumSyllables() {
         //TODO: write this method.  Hint: It's simple
-        return 0;
+        return numSyllables;
 	}
 	
 	// Can be used for testing
 	// We encourage you to add your own tests here.
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 	    testCase(new EfficientDocument("This is a test.  How many???  "
                 + "Senteeeeeeeeeences are here... there should be 5!  Right?"),
                 16, 13, 5);
@@ -138,9 +157,6 @@ public class EfficientDocument extends Document {
 		testCase(new EfficientDocument("Sentence"), 2, 1, 1);
 		testCase(new EfficientDocument("Sentences?!"), 3, 1, 1);
 		testCase(new EfficientDocument("Lorem ipsum dolor sit amet, qui ex choro quodsi moderatius, nam dolores explicari forensibus ad."),
-		         32, 15, 1);
-		
+		         32, 15, 1);	
 	}
-	
-
 }
