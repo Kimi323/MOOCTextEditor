@@ -88,6 +88,7 @@ public class MyLinkedListGrader {
 		lst = new MyLinkedList<Integer>();
 		lst.add(0, 1);
 		lst.remove(0);
+		// got NullPointerException here, confused why lst is not empty after remove(0)??
 		lst.add(0, 1);
                 feedback += "Got " + printListForwards(lst) + ". ";
 

@@ -156,18 +156,23 @@ public class MyLinkedListTester {
 	public void testAddAtIndex()
 	{
         // TODO: implement this test
+		emptyList.add(0, 1);
+		emptyList.add(0, 2);
+		assertEquals("addAtIndex: check add to an empty list", (Integer)1, emptyList.get(1));
+		assertEquals("addAtIndex: check add to an empty list", (Integer)2, emptyList.get(0));
+		
 		shortList.add(1, "");
 		assertEquals("AddAtIndex: check element at position index is correct", "", shortList.get(1));
 		assertEquals("AddAtIndex: check element at position index+1 is correct", "B", shortList.get(2));
 		assertEquals("AddAtIndex: check size is correct", 3, shortList.size);
 		
-		try {
-			shortList.add(-1, "Z");
-			fail("Check out of bounds");
-		}
-		catch (IndexOutOfBoundsException e) {
-			System.out.println("caught exception: IndexOutOfBoundsException");
-		}
+//		try {
+//			emptyList.add(1, 2);
+//			fail("Check out of bounds");
+//		}
+//		catch (IndexOutOfBoundsException e) {
+//			System.out.println("caught exception: IndexOutOfBoundsException");
+//		}
 		
 		try {
 			shortList.add(5, "Z");
@@ -184,7 +189,7 @@ public class MyLinkedListTester {
 		catch (NullPointerException e) {
 			System.out.println("caught exception: NullPointerException");
 		}
-				
+
 	}
 	
 	/** Test setting an element in the list */
