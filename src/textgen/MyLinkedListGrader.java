@@ -34,7 +34,7 @@ public class MyLinkedListGrader {
 			curr = lst.tail;
 		while (curr != null && curr.data != null)
 		{
-		        ret += curr.data;
+		    ret += curr.data;
 			curr = curr.prev;
 		}
                 return ret;
@@ -88,7 +88,6 @@ public class MyLinkedListGrader {
 		lst = new MyLinkedList<Integer>();
 		lst.add(0, 1);
 		lst.remove(0);
-		// got NullPointerException here, confused why lst is not empty after remove(0)??
 		lst.add(0, 1);
                 feedback += "Got " + printListForwards(lst) + ". ";
 
@@ -96,7 +95,7 @@ public class MyLinkedListGrader {
                 feedback += "List size is " + lst.size() + ". ";
 
                 feedback += "** Tests 11-20: Testing method bounds...";
-                
+                System.out.println("feedback: " + feedback); //why out is not printed?
                 out.println(feedback + "Tests complete. Check that everything is as expected.");
                 out.close();
 		

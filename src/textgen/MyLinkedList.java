@@ -39,12 +39,14 @@ public class MyLinkedList<E> extends AbstractList<E> {
 		
 		LLNode<E> currNode = new LLNode<E>(element);
 		if (size == 0) {
+			currNode.next = tail;
+			currNode.prev = head;
 			head.next = currNode;
 			tail.prev = currNode;
 			size++;
-		} else {			
-			currNode.prev = tail.prev;
+		} else {
 			currNode.next = tail;
+			currNode.prev = tail.prev;			
 			tail.prev.next = currNode;
 			tail.prev = currNode;
 			size++;
@@ -85,13 +87,13 @@ public class MyLinkedList<E> extends AbstractList<E> {
 		}
 
 		if (size == 0) {
-			System.out.println("this is an empty list");
+			//System.out.println("this is an empty list");
 			add(element);
 		} else {			
 			LLNode<E> currNode = new LLNode<E>(element);
 			LLNode<E> nextNode = head.next;
 			
-			if (index < 0 || index > size - 1) {
+			if (index < 0 || index > size) {
 				throw new IndexOutOfBoundsException();
 			}
 			
@@ -146,21 +148,21 @@ public class MyLinkedList<E> extends AbstractList<E> {
 		for (int i=0; i<index;i++) {
 			currNode = currNode.next;
 		}
-		
+		// currNode is the first node
 		if (currNode.prev == null) {
 			head.next = currNode.next;			
-		} else {
-			currNode.prev.next = currNode.next;
-			currNode.prev = null;
-		}
+		} 
+		// currNode is the last node
+		else if (currNode.next == null) {
+			tail.prev = currNode.prev; 
+		} 
 		
-		if (currNode.next == null) {
-			tail.prev = currNode.prev;
-		} else {
+		else {
+			currNode.prev.next = currNode.next;
 			currNode.next.prev = currNode.prev;
 			currNode.next = null;
-		}
-						
+			currNode.prev = null;
+		}						
 		return currNode.data;
 	}
 
