@@ -37,6 +37,7 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 		for (int i=0; i<words.length; i++ ) {
 			String currWord = words[i];
 			String nextWord = "";
+			
 			if (i == words.length - 1) {
 				nextWord = words[0];
 			} else {
@@ -47,18 +48,17 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 				ListNode listnode = new ListNode(currWord);
 				wordList.add(listnode);
 				listnode.addNextWord(nextWord);
-			}
-			
-			// if wordList is not empty, check currWord is inside or not
-			for (ListNode ln : wordList) {
-				if (ln.getWord().equals(currWord)) {
-					ln.addNextWord(nextWord);
-				} else {
-					ListNode listnode = new ListNode(currWord);
-					wordList.add(listnode);
-					listnode.addNextWord(nextWord);
+			} else {
+				// if wordList is not empty, check currWord is inside or not
+				for (ListNode ln : wordList) {
+					if (ln.getWord().equals(currWord)) {
+						ln.addNextWord(nextWord);
+					} 
 				}
-			}
+				ListNode listnode = new ListNode(currWord);
+				wordList.add(listnode);
+				listnode.addNextWord(nextWord);				
+			}						
 		}
 	}
 	
@@ -103,7 +103,8 @@ public class MarkovTextGeneratorLoL implements MarkovTextGenerator {
 	{
 		// feed the generator a fixed random value for repeatable behavior
 		MarkovTextGeneratorLoL gen = new MarkovTextGeneratorLoL(new Random(42));
-		String textString = "Hello.  Hello there.  This is a test.  Hello there.  Hello Bob.  Test again.";
+		//String textString = "Hello.  Hello there.  This is a test.  Hello there.  Hello Bob.  Test again.";
+		String textString = "hi there hi leo";
 		System.out.println(textString);
 		gen.train(textString);
 		System.out.println(gen);
