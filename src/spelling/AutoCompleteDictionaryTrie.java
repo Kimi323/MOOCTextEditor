@@ -1,9 +1,9 @@
 package spelling;
 
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /** 
@@ -40,7 +40,27 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public boolean addWord(String word)
 	{
 	    //TODO: Implement this method.
-	    return false;
+		word = word.toLowerCase();
+		TrieNode currNode = root;
+		// go through the trie from root and check if the letter is inside.
+		for(int i = 0; i < word.length(); i++) {
+			char currChar = word.charAt(i);
+			// if not, insert the letter
+			if(currNode.getChild(currChar) == null) {
+				currNode.insert(currChar);
+			}
+			// go to the next node
+			currNode = currNode.getChild(currChar);
+		}
+		// if the last node is already a word, which means we have already
+		// inserted the word, return false. boolean isWord is false by default.
+		if (currNode.endsWord()) {
+			return false;
+		}
+		currNode.setEndsWord(true);	
+		size++;
+		//System.out.println(currNode.getText() + " inserted, size is " + size);
+		return true;
 	}
 	
 	/** 
@@ -50,7 +70,7 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public int size()
 	{
 	    //TODO: Implement this method
-	    return 0;
+	    return size;
 	}
 	
 	
@@ -60,7 +80,24 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 	public boolean isWord(String s) 
 	{
 	    // TODO: Implement this method
-		return false;
+		if (s == "") {
+			return false;
+		}
+		s = s.toLowerCase();
+		TrieNode currNode = root;
+		// go through the trie from root and check if the letter is inside.
+		for(int i = 0; i < s.length(); i++) {
+			char currChar = s.charAt(i);
+			// if not, insert the letter
+			if(currNode.getChild(currChar) == null) {
+				System.out.println(s + " is not in trie");
+				return false;
+			}
+			// go to the next node
+			currNode = currNode.getChild(currChar);
+		}
+		//System.out.println(s + " is a word in trie");
+		return true;
 	}
 
 	/** 
@@ -101,7 +138,43 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
     	 //       Add all of its child nodes to the back of the queue
     	 // Return the list of completions
     	 
-         return null;
+    	 ArrayList<String> completion = new ArrayList<String>();
+    	 Queue <TrieNode> q = new LinkedList<TrieNode>();
+    	 TrieNode currNode = root;
+    	 
+    	 // if given prefix (stem) is not empty and is not a word in the trie
+    	 // return empty completion list.
+    	 if (!isWord(prefix) && prefix != "") {
+    		 //System.out.println(prefix + "is not in trie, return empty completion list");
+    		 return completion;
+    	 }
+    	 // go through the trie and find the last node of the stem.
+    	 for (int i=0; i<prefix.length(); i++) {
+    		 Character c = prefix.charAt(i);
+    		 currNode = currNode.getChild(c);    		 
+    	 }
+    	 // add this node to queue
+    	 q.add(currNode);
+    	 
+    	 while (!q.isEmpty() && completion.size() < numCompletions) {
+    		 // remove the first node in queue, if the removed node is a word, add this word to completion list.
+    		 currNode = q.remove();
+    		 if (currNode.endsWord()) {
+    			 completion.add(currNode.getText());
+    			 //System.out.println(currNode.getText() + "is added");
+    			 //System.out.println(completion);
+    		 }
+    		 // as long as q.remove() returns not null, add children of current node into queue
+    		 if (currNode != null) {
+    			 Set<Character> keySet = currNode.getValidNextCharacters();
+    			 for (Character c : keySet) {
+    				 TrieNode tn = currNode.getChild(c);
+    				 q.add(tn);
+    			 }
+    		 }
+
+    	 }
+         return completion;
      }
 
  	// For debugging
