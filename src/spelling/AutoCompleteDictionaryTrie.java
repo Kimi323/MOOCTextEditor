@@ -59,7 +59,7 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 		}
 		currNode.setEndsWord(true);	
 		size++;
-		//System.out.println(currNode.getText() + " inserted, size is " + size);
+		System.out.println(currNode.getText() + " inserted, size is " + size);
 		return true;
 	}
 	
@@ -90,11 +90,16 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 			char currChar = s.charAt(i);
 			// if not, insert the letter
 			if(currNode.getChild(currChar) == null) {
-				System.out.println(s + " is not in trie");
+				//System.out.println(s + " is not in trie");
 				return false;
 			}
 			// go to the next node
 			currNode = currNode.getChild(currChar);
+		}
+		// check if the currNode ends with a word. e.g downhill is a word but downhille and downhil is not.
+		if (!currNode.endsWord()) {
+			//System.out.println(s + " is not in trie");
+			return false;
 		}
 		//System.out.println(s + " is a word in trie");
 		return true;

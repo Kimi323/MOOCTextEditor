@@ -55,6 +55,7 @@ public class TrieGrader {
         appendTestString(2,"Adding two more words and testing size...");
         ac.addWord("downhill");
         ac.addWord("downhiller");
+        //ac.printTree();
 
         feedback.append("Size is " + ac.size() + ".");
 
@@ -81,7 +82,7 @@ public class TrieGrader {
         ac.addWord("testcase");
         ac.addWord("testbase");
         ac.addWord("testcases");
-
+        //ac.printTree();
 
         feedback.append("Dict size is " + ac.size() + ".");
 
@@ -100,7 +101,7 @@ public class TrieGrader {
         appendTestString(6,"Checking empty string...");
         // test empty string
         feedback.append("Empty string in dictionary: " + ac.isWord("") + ".");
-
+        ac.printTree();
         appendTestString(7, "Checking for word in dictionary...");
         feedback.append("'doggoes' in dictionary: " + ac.isWord("doggoes") + ".");
 
@@ -181,6 +182,7 @@ public class TrieGrader {
 
     private void appendTestString(int num, String description) {
         feedback.append("\n\n** Test #" + num + ": " + description + "\n");
+        System.out.println(feedback);
     }
 
     private StringBuilder getFeedback() {
