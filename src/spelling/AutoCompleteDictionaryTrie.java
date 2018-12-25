@@ -59,7 +59,7 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 		}
 		currNode.setEndsWord(true);	
 		size++;
-		System.out.println(currNode.getText() + " inserted, size is " + size);
+		//System.out.println(currNode.getText() + " inserted, size is " + size);
 		return true;
 	}
 	
