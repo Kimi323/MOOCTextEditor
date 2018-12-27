@@ -144,10 +144,11 @@ public class NearbyWords implements SpellingSuggest {
 			// remove the word from the start of the queue and assign to curr
 			String curr = queue.remove(0); // why cannot use remove() like autoCompleteDictionaryTrie?
 			for(String n : distanceOne(curr, true)) {
-				if (!visited.contains(n)) {
+				if (!visited.contains(n) && retList.size() < numSuggestions) {
 					queue.add(n);
 					System.out.println(queue.toString());
 					retList.add(n);
+					System.out.println("retList.size() = " + retList.size());
 				}				
 			}
 		}		
@@ -175,7 +176,7 @@ public class NearbyWords implements SpellingSuggest {
 	   System.out.println(l+"\n");
 
 	   word = "tailo";
-	   List<String> suggest = w.suggestions(word, 10);
+	   List<String> suggest = w.suggestions(word, 100);
 	   System.out.println("Spelling Suggestions for \""+word+"\" are:");
 	   System.out.println(suggest);
    }
