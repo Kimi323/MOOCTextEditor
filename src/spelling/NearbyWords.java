@@ -51,14 +51,19 @@ public class NearbyWords implements SpellingSuggest {
 	public void substitution(String s, List<String> currentList, boolean wordsOnly) {
 		// for each letter in the s and for all possible replacement characters
 		for(int index = 0; index < s.length(); index++){
+			// convert character to ASCII numeric value a=97 b=98 ...z=122 so that we can loop
 			for(int charCode = (int)'a'; charCode <= (int)'z'; charCode++) {
-				// use StringBuffer for an easy interface to permuting the 
-				// letters in the String
+				// use StringBuffer for an easy interface to permuting the letters in the String
 				StringBuffer sb = new StringBuffer(s);
+				// replace alphabet at index position with a-z
 				sb.setCharAt(index, (char)charCode);
 
-				// if the item isn't in the list, isn't the original string, and
+				// if the item isn't in currentList && isn't the original string &&
 				// (if wordsOnly is true) is a real word, add to the list
+				// if wordsOnly is true, then !wordsOnly is false. if s is not a real word, 
+				// !wordsOnly||dict.isWord(sb.toString()) returns false, so s will not be added to list.
+				// if wordsOnly is false, then !wordsOnly is true. No matter s is real word or not, it will
+				// be added to list.
 				if(!currentList.contains(sb.toString()) && 
 						(!wordsOnly||dict.isWord(sb.toString())) &&
 						!s.equals(sb.toString())) {
@@ -76,7 +81,19 @@ public class NearbyWords implements SpellingSuggest {
 	 * @return
 	 */
 	public void insertions(String s, List<String> currentList, boolean wordsOnly ) {
-		// TODO: Implement this method  
+		// TODO: Implement this method
+		for (int index = 0; index < s.length() + 1; index++) {
+			for (int charCode = (int)'a'; charCode <= (int)'z'; charCode++) {
+				StringBuffer sb = new StringBuffer(s);
+				sb.insert(index, (char)charCode);
+				
+				if (!currentList.contains(sb.toString()) && 
+						(!wordsOnly || dict.isWord(sb.toString())) &&
+						!s.equals(sb.toString())) {
+					currentList.add(sb.toString());
+				}
+			}
+		}
 	}
 
 	/** Add to the currentList Strings that are one character deletion away
@@ -88,6 +105,16 @@ public class NearbyWords implements SpellingSuggest {
 	 */
 	public void deletions(String s, List<String> currentList, boolean wordsOnly ) {
 		// TODO: Implement this method
+		for (int index = 0; index < s.length(); index++) {
+			StringBuffer sb = new StringBuffer(s);
+			sb.delete(index, index + 1);
+			
+			if (!currentList.contains(sb.toString()) && 
+					(!wordsOnly || dict.isWord(sb.toString())) &&
+					!s.equals(sb.toString())) {
+				currentList.add(sb.toString());
+			}
+		}
 	}
 
 	/** Add to the currentList Strings that are one character deletion away
@@ -99,25 +126,45 @@ public class NearbyWords implements SpellingSuggest {
 	@Override
 	public List<String> suggestions(String word, int numSuggestions) {
 
-		// initial variables
-		List<String> queue = new LinkedList<String>();     // String to explore
-		HashSet<String> visited = new HashSet<String>();   // to avoid exploring the same  
-														   // string multiple times
+		// Create a queue to hold words to explore
+		List<String> queue = new LinkedList<String>();
+		// Create a visited set to avoid looking at the same String repeatedly. HashSet ensures no duplicates
+		HashSet<String> visited = new HashSet<String>(); 
+		// Create list of real words to return when finished												   // string multiple times
 		List<String> retList = new LinkedList<String>();   // words to return
-		 
-		
-		// insert first node
+		 		
+		// Add the initial word to the queue and visited
 		queue.add(word);
+		System.out.println(queue.toString());
 		visited.add(word);
 					
-		// TODO: Implement the remainder of this method, see assignment for algorithm
-		
+		// TODO: Implement the remainder of this method, see assignment for algorithm	
+		// while the queue has elements and we need more suggestions
+		while (!queue.isEmpty() && retList.size() < numSuggestions) {
+			// remove the word from the start of the queue and assign to curr
+			String curr = queue.remove(0); // why cannot use remove() like autoCompleteDictionaryTrie?
+			for(String n : distanceOne(curr, true)) {
+				if (!visited.contains(n)) {
+					queue.add(n);
+					System.out.println(queue.toString());
+					retList.add(n);
+				}				
+			}
+		}		
+	//		 get a list of neighbors (strings one mutation away from curr)
+	//		 for each n in the list of neighbors
+	//		 if n is not visited
+	//		 add n to the visited set
+	//		 add n to the back of the queue
+	//		 if n is a word in the dictionary
+	//		 add n to the list of words to return
+	//		return the list of real words
 		return retList;
 
 	}	
 
    public static void main(String[] args) {
-	   /* basic testing code to get started
+	   // basic testing code to get started
 	   String word = "i";
 	   // Pass NearbyWords any Dictionary implementation you prefer
 	   Dictionary d = new DictionaryHashSet();
@@ -131,7 +178,6 @@ public class NearbyWords implements SpellingSuggest {
 	   List<String> suggest = w.suggestions(word, 10);
 	   System.out.println("Spelling Suggestions for \""+word+"\" are:");
 	   System.out.println(suggest);
-	   */
    }
 
 }

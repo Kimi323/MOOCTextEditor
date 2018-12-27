@@ -27,7 +27,6 @@ public class NearbyWordsGraderOne {
             
             feedback += "** Test 1: distanceOne list size... ";
             feedback += "distanceOne returned " + d1.size() + " words.\n";
-
             feedback += "** Test 2: distanceOne words returned... ";
             for (String i : d1) {
                 feedback += i + ", ";
