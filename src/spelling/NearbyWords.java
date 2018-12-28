@@ -145,7 +145,7 @@ public class NearbyWords implements SpellingSuggest {
 		while (!queue.isEmpty() && retList.size() < numSuggestions) {
 			// remove the word from the start of the queue and assign to curr
 			//System.out.println("queue = " + queue.toString());
-			String curr = queue.remove(0); // why cannot use remove() like autoCompleteDictionaryTrie?
+			String curr = queue.remove(0); // why cannot use remove() like autoCompleteDictionaryTrie? because this queue is declared as LinkedList, not Queue.
 			//System.out.println(curr + " removed from queue");
 			// get a list of neighbors (strings one mutation away from curr)
 			for(String n : distanceOne(curr, true)) {				
