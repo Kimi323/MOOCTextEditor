@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.plaf.synth.SynthSeparatorUI;
+
 
 /**
  * @author UC San Diego Intermediate MOOC team
@@ -142,26 +144,22 @@ public class NearbyWords implements SpellingSuggest {
 		// while the queue has elements and we need more suggestions
 		while (!queue.isEmpty() && retList.size() < numSuggestions) {
 			// remove the word from the start of the queue and assign to curr
+			//System.out.println("queue = " + queue.toString());
 			String curr = queue.remove(0); // why cannot use remove() like autoCompleteDictionaryTrie?
-			for(String n : distanceOne(curr, true)) {
+			//System.out.println(curr + " removed from queue");
+			// get a list of neighbors (strings one mutation away from curr)
+			for(String n : distanceOne(curr, true)) {				
+				//for each n in the list of neighbors if n is not visited and still need more suggestions
 				if (!visited.contains(n) && retList.size() < numSuggestions) {
-					queue.add(n);
-					System.out.println(queue.toString());
+					// add n to the visited set
+					// add n to the back of the queue
+					visited.add(n);
+					queue.add(n);							
 					retList.add(n);
-					System.out.println("retList.size() = " + retList.size());
-				}				
+				}
 			}
 		}		
-	//		 get a list of neighbors (strings one mutation away from curr)
-	//		 for each n in the list of neighbors
-	//		 if n is not visited
-	//		 add n to the visited set
-	//		 add n to the back of the queue
-	//		 if n is a word in the dictionary
-	//		 add n to the list of words to return
-	//		return the list of real words
 		return retList;
-
 	}	
 
    public static void main(String[] args) {
@@ -175,7 +173,8 @@ public class NearbyWords implements SpellingSuggest {
 //	   System.out.println("One away word Strings for for \""+word+"\" are:");
 //	   System.out.println(l+"\n");
 //
-//	   word = "tailo";
+//	   //word = "tailo";
+//	   word = "appls";
 //	   List<String> suggest = w.suggestions(word, 100);
 //	   System.out.println("Spelling Suggestions for \""+word+"\" are:");
 //	   System.out.println(suggest);
