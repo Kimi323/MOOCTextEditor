@@ -88,7 +88,8 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 		// go through the trie from root and check if the letter is inside.
 		for(int i = 0; i < s.length(); i++) {
 			char currChar = s.charAt(i);
-			// if not, insert the letter
+			// if not, insert the letter.
+			// if currNode does not have child, s is not in the tree. e.g. isWord("downhille") = false
 			if(currNode.getChild(currChar) == null) {
 				//System.out.println(s + " is not in trie");
 				return false;
@@ -96,12 +97,11 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
 			// go to the next node
 			currNode = currNode.getChild(currChar);
 		}
-		// check if the currNode ends with a word. e.g downhill is a word but downhille and downhil is not.
+		// check if the currNode ends with a word.
+		// e.g downhil is in the stem, but not end with a word. so isWord("downhil") should be false
 		if (!currNode.endsWord()) {
-			//System.out.println(s + " is not in trie");
 			return false;
 		}
-		//System.out.println(s + " is a word in trie");
 		return true;
 	}
 
@@ -128,56 +128,38 @@ public class AutoCompleteDictionaryTrie implements  Dictionary, AutoComplete {
      */@Override
      public List<String> predictCompletions(String prefix, int numCompletions) 
      {
-    	 // TODO: Implement this method
-    	 // This method should implement the following algorithm:
-    	 // 1. Find the stem in the trie.  If the stem does not appear in the trie, return an
-    	 //    empty list
-    	 // 2. Once the stem is found, perform a breadth first search to generate completions
-    	 //    using the following algorithm:
-    	 //    Create a queue (LinkedList) and add the node that completes the stem to the back
-    	 //       of the list.
-    	 //    Create a list of completions to return (initially empty)
-    	 //    While the queue is not empty and you don't have enough completions:
-    	 //       remove the first Node from the queue
-    	 //       If it is a word, add it to the completions list
-    	 //       Add all of its child nodes to the back of the queue
-    	 // Return the list of completions
-    	 
+    	 // TODO: Implement this method   	 
     	 ArrayList<String> completion = new ArrayList<String>();
     	 Queue <TrieNode> q = new LinkedList<TrieNode>();
     	 TrieNode currNode = root;
     	 
-    	 // if given prefix (stem) is not empty and is not a word in the trie
-    	 // return empty completion list.
-    	 if (!isWord(prefix) && prefix != "") {
-    		 //System.out.println(prefix + "is not in trie, return empty completion list");
-    		 return completion;
-    	 }
-    	 // go through the trie and find the last node of the stem.
+    	 // Find the stem in the trie.  If the stem does not appear in the trie, return an empty list
     	 for (int i=0; i<prefix.length(); i++) {
     		 Character c = prefix.charAt(i);
-    		 currNode = currNode.getChild(c);    		 
+    		 currNode = currNode.getChild(c);
+    		 if (currNode == null) {
+    			 return completion;
+    		 }
     	 }
-    	 // add this node to queue
+    	 // Once the stem is found, perform a breadth first search to generate completions
+    	 // Firstly add the stem to the back of the queue
     	 q.add(currNode);
-    	 
+    	 // While the queue is not empty and you don't have enough completions:
     	 while (!q.isEmpty() && completion.size() < numCompletions) {
-    		 // remove the first node in queue, if the removed node is a word, add this word to completion list.
+    		 // remove the first node from the queue
+    		 // if the removed node is a word, add this word to completion list.
     		 currNode = q.remove();
     		 if (currNode.endsWord()) {
     			 completion.add(currNode.getText());
     			 //System.out.println(currNode.getText() + "is added");
-    			 //System.out.println(completion);
+    			 //System.out.println(completion); 
     		 }
-    		 // as long as q.remove() returns not null, add children of current node into queue
-    		 if (currNode != null) {
-    			 Set<Character> keySet = currNode.getValidNextCharacters();
-    			 for (Character c : keySet) {
-    				 TrieNode tn = currNode.getChild(c);
-    				 q.add(tn);
-    			 }
-    		 }
-
+    		 // Add all of its child nodes to the back of the queue
+			 Set<Character> keySet = currNode.getValidNextCharacters();
+			 for (Character c : keySet) {
+				 TrieNode tn = currNode.getChild(c);
+				 q.add(tn);
+			 }
     	 }
          return completion;
      }

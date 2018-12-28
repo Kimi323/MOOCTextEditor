@@ -79,6 +79,8 @@ public class AutoCompleteDictionaryTrieTester {
 		assertEquals("Testing isWord on large: no", true, largeDict.isWord("no"));
 		
 		assertEquals("Testing isWord on small: subsequent", true, smallDict.isWord("subsequent"));
+		assertEquals("Testing isWord on small: subsequen", false, smallDict.isWord("subsequen"));
+		assertEquals("Testing isWord on small: subsequentt", false, smallDict.isWord("subsequentt"));
 		assertEquals("Testing isWord on large: subsequent", true, largeDict.isWord("subsequent"));
 		
 		
